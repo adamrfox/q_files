@@ -187,7 +187,7 @@ if __name__ == "__main__":
         files_to_close = args
         files = get_open_files(qumulo, auth)
         for f in files_to_close:
-            if '.' in f:
+            if '.' in f and not f.startswith('/'):
                 body = {'file_number': 0, 'handle_info': {'owner': '0', 'access_mask': ['MS_ACCESS_FILE_READ_ATTRIBUTES'],
                                                           'version': 0, 'location': f, 'num_byte_range_locks': 0}}
                 locations.append(body)
