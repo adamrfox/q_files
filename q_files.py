@@ -12,7 +12,7 @@ urllib3.disable_warnings()
 import os
 from datetime import datetime
 import pprint
-pp = pprint.PrettyPrinter(indent=4)
+pp = pprint.PrettyPrinter(indent=4, width=80)
 
 def usage():
     sys.stderr.write("Usage goes here!")
@@ -173,8 +173,16 @@ if __name__ == "__main__":
     auth = api_login(qumulo, user, password, token)
     dprint(str(auth))
     if cmd == "list":
+        table = [['id:', 'location:', 'path:'], ['', '', '']]
         files = get_open_files(qumulo, auth)
-        pp.pprint(files)
+        for f in files:
+            table.append([f['id'], f['location'], f['name']])
+#        col_width = max(len(word) for row in table for word in row) + 2
+#        for row in table:
+#            print("".join(word.ljust(col_width) for word in row))
+        widths = [max(map(len, col)) for col in zip(*table)]
+        for row in table:
+            print("  ".join((val.ljust(width) for val, width in zip(row, widths))))
     elif cmd == "close":
         files_to_close = args
         files = get_open_files(qumulo, auth)
@@ -189,5 +197,4 @@ if __name__ == "__main__":
                 sys.stderr.write("Unrecognized file: " + f)
                 exit(2)
         dprint(str(locations))
-
-
+        res = qumulo_post(qumulo, '/v1/smb/files/close', json.dumps(locations))
