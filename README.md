@@ -28,6 +28,6 @@ When open files are listed, the ID, location, and name are shown.  Any of these 
 
 The script can, of course, be run as an admin user but that's not required.  Another user with limited RBAC user with the following privs can be used:
 <PRE>
-SNB_FILE_HANDLE_READ
+SMB_FILE_HANDLE_READ
 SMB_FILE_HANDLE_WRITE
 </PRE>
