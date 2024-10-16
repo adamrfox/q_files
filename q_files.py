@@ -3,19 +3,22 @@ import sys
 import getopt
 import getpass
 import requests
-import urllib.parse
 import json
 import time
 import urllib.parse
 import urllib3
 urllib3.disable_warnings()
 import os
-from datetime import datetime
-import pprint
-pp = pprint.PrettyPrinter(indent=4, width=80)
 
 def usage():
-    sys.stderr.write("Usage goes here!")
+    sys.stderr.write("Usage: q_files.py [-HD] [-t token] [-c creds] [-f token_file] command qumulo [file file ...]\n")
+    sys.stderr.write("-h | --help : Displays the Usage\n")
+    sys.stderr.write("-D | - DEBUG : Provides debug information\n")
+    sys.stderr.write('-c | --creds : Login credentials format user:password\n')
+    sys.stderr.write('-t | --token : Use an auth token\n')
+    sys.stderr.write('-f | --token-file : Use a token file generated from qq auth_create_token\n')
+    sys.stderr.write("command : list and close are currently supported\n")
+    sys.stderr.write("file file ... : A list of file names, ids, or locations. Space separated. [for close only]\n")
     exit(0)
 
 def dprint(message):
@@ -173,13 +176,10 @@ if __name__ == "__main__":
     auth = api_login(qumulo, user, password, token)
     dprint(str(auth))
     if cmd == "list":
-        table = [['id:', 'location:', 'path:'], ['', '', '']]
+        table = [['id:', 'location:', 'path:'], ['===', '=========', '=====']]
         files = get_open_files(qumulo, auth)
         for f in files:
             table.append([f['id'], f['location'], f['name']])
-#        col_width = max(len(word) for row in table for word in row) + 2
-#        for row in table:
-#            print("".join(word.ljust(col_width) for word in row))
         widths = [max(map(len, col)) for col in zip(*table)]
         for row in table:
             print("  ".join((val.ljust(width) for val, width in zip(row, widths))))
