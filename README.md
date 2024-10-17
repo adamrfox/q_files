@@ -5,9 +5,10 @@ While QumuoCore supports using the MMC to view and close open SMB files, there a
 It is possble to use the Qumulo CLI (qq) to view and close open file, but it is a multi-step process.  This project is an attempt to simpify the interface.
 
 <pre>
-Usage: q_files.py [-hD] [-t token] [-c creds] [-f token_file] command qumulo [file file ...]
+Usage: q_files.py [-hDF] [-t token] [-c creds] [-f token_file] command qumulo [file file ...]
 -h | --help : Displays the Usage
 -D | --DEBUG : Provides debug information
+-F | --files-only : Only show files, not directories
 -c | --creds : Login credentials format user:password
 -t | --token : Use an auth token
 -f | --token-file : Use a token file generated from qq auth_create_token
