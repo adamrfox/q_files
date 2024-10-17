@@ -104,10 +104,12 @@ def get_token_from_file(file):
     dprint(t_data['bearer_token'])
     return(t_data['bearer_token'])
 
-def get_open_files (qumulo, auth):
+def get_open_files (qumulo, FILES_ONLY):
     files_list = []
     open_files = qumulo_get(qumulo, '/v1/smb/files/?resolve_paths=true')
     for f in open_files['file_handles']:
+        if f['handle_info']['path'].endswith('/') and FILES_ONLY:
+            continue
         id = f['file_number']
         name = f['handle_info']['path']
         location = f['handle_info']['location']
@@ -136,6 +138,7 @@ def get_fh(files, f):
 if __name__ == "__main__":
     DEBUG = False
     VERBOSE = False
+    FILES_ONLY = False
     token = ""
     token_file = ""
     default_token_file = ".qfsd_cred"
@@ -149,13 +152,15 @@ if __name__ == "__main__":
     files_to_close = []
     locations = []
 
-    optlist, args = getopt.getopt(sys.argv[1:], 'hDt:c:f:', ['help', 'DEBUG', 'token=', 'creds=',
+    optlist, args = getopt.getopt(sys.argv[1:], 'hDFt:c:f:', ['help', 'DEBUG', 'files-only', 'token=', 'creds=',
                                                             'token-file='])
     for opt, a in optlist:
         if opt in ['-h', '--help']:
             usage()
         if opt in ('-D', '--DEBUG'):
             DEBUG = True
+        if opt in ('-F', '--files-only'):
+            FILES_ONLY = True
         if opt in ('-t', '--token'):
             token = a
         if opt in ('-f', '--token-file'):
@@ -177,7 +182,7 @@ if __name__ == "__main__":
     dprint(str(auth))
     if cmd == "list":
         table = [['id:', 'location:', 'path:'], ['===', '=========', '=====']]
-        files = get_open_files(qumulo, auth)
+        files = get_open_files(qumulo, FILES_ONLY)
         for f in files:
             table.append([f['id'], f['location'], f['name']])
         widths = [max(map(len, col)) for col in zip(*table)]
