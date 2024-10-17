@@ -13,7 +13,8 @@ import os
 def usage():
     sys.stderr.write("Usage: q_files.py [-HD] [-t token] [-c creds] [-f token_file] command qumulo [file file ...]\n")
     sys.stderr.write("-h | --help : Displays the Usage\n")
-    sys.stderr.write("-D | - DEBUG : Provides debug information\n")
+    sys.stderr.write("-D | --DEBUG : Provides debug information\n")
+    sys.stderr.write("-F | --files-only : Only show files, not directories\n")
     sys.stderr.write('-c | --creds : Login credentials format user:password\n')
     sys.stderr.write('-t | --token : Use an auth token\n')
     sys.stderr.write('-f | --token-file : Use a token file generated from qq auth_create_token\n')
