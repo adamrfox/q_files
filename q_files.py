@@ -21,6 +21,7 @@ def usage():
     sys.stderr.write('-t | --token : Use an auth token\n')
     sys.stderr.write('-f | --token-file : Use a token file generated from qq auth_create_token\n')
     sys.stderr.write("command : list and close are currently supported\n")
+    sys.stderr.write("qumulo : Name or IP address of a Qumulo node\n")
     sys.stderr.write("file file ... : A list of file names, ids, or locations. Space separated. [for close only]\n")
     exit(0)
 
