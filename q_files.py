@@ -9,6 +9,8 @@ import urllib.parse
 import urllib3
 urllib3.disable_warnings()
 import os
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 def usage():
     sys.stderr.write("Usage: q_files.py [-HD] [-t token] [-c creds] [-f token_file] command qumulo [file file ...]\n")
@@ -132,7 +134,7 @@ def get_fh(files, f):
             found = True
             fh_list.append(body)
     if not found:
-        sys.stderr.write('Unrecognized file ' + f + '\n')
+        sys.stderr.write('Unrecognized file [get_fh]: ' + f + '\n')
         exit(2)
     return(fh_list)
 
@@ -191,7 +193,7 @@ if __name__ == "__main__":
             print("  ".join((val.ljust(width) for val, width in zip(row, widths))))
     elif cmd == "close":
         files_to_close = args
-        files = get_open_files(qumulo, auth)
+        files = get_open_files(qumulo, FILES_ONLY)
         for f in files_to_close:
             if '.' in f and not f.startswith('/'):
                 body = {'file_number': 0, 'handle_info': {'owner': '0', 'access_mask': ['MS_ACCESS_FILE_READ_ATTRIBUTES'],
@@ -200,7 +202,7 @@ if __name__ == "__main__":
             elif f.isdigit() or f.startswith('/'):
                 locations = get_fh(files, f)
             else:
-                sys.stderr.write("Unrecognized file: " + f)
+                sys.stderr.write("Unrecognized file [main]: " + f)
                 exit(2)
         dprint(str(locations))
         res = qumulo_post(qumulo, '/v1/smb/files/close', json.dumps(locations))
