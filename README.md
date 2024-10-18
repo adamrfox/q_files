@@ -13,6 +13,7 @@ Usage: q_files.py [-hDF] [-t token] [-c creds] [-f token_file] command qumulo [f
 -t | --token : Use an auth token
 -f | --token-file : Use a token file generated from qq auth_create_token
 command : list and close are currently supported
+qumulo : Name or IP address of a Qumulo node
 file file ... : A list of file names, ids, or locations. Space separated. [for close only]
 </pre>
 
