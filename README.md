@@ -14,7 +14,7 @@ Usage: q_files.py [-hDF] [-t token] [-c creds] [-f token_file] command qumulo [f
 -f | --token-file : Use a token file generated from qq auth_create_token
 command : list and close are currently supported
 qumulo : Name or IP address of a Qumulo node
-file file ... : A list of file names, ids, or locations. Space separated. [for close only]
+file file ... : A list of file names, ids, or locations. Space separated.
 </pre>
 
 Authentication:
@@ -24,6 +24,9 @@ The API calls used by this script need to be authenticated.  The script provides
 2. Specify an access token on the command line via -t.
 3. Specify a file that congtains the token.  The format expected is the output from the Qumulo CLI command qq auth_create_access_token.  If a file called .qfsd_creds exists (the default file from that command), the script wil use that.  This is useful for unattended runs (e.g. via cron)
 4. If no other options are used, the script will prompt for a user and password.  The password is not echoed to the screen.
+
+Specifiying Files to List:
+When the 'list' command is used, any arguemnts found after the cluster name will be treated as a search pattern.  Regular expressions are supported. Multiple patterns can be specified using a space separator. If multiple patterns are specified, they are treated as an OR with respect to matching.
 
 Specifiying Files to Close:
 When open files are listed, the ID, location, and name are shown.  Any of these can be used to close a file.  If an ID or name is used, all locations to that file will be closed.  If a file has multiple instnaces and it is desired to only close of them, use the location as it is unqiue.
