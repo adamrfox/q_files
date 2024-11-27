@@ -9,6 +9,7 @@ import urllib.parse
 import urllib3
 urllib3.disable_warnings()
 import os
+import re
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -22,7 +23,7 @@ def usage():
     sys.stderr.write('-f | --token-file : Use a token file generated from qq auth_create_token\n')
     sys.stderr.write("command : list and close are currently supported\n")
     sys.stderr.write("qumulo : Name or IP address of a Qumulo node\n")
-    sys.stderr.write("file file ... : A list of file names, ids, or locations. Space separated. [for close only]\n")
+    sys.stderr.write("file file ... : A list of file names, ids, or locations. Space separated.\n")
     exit(0)
 
 def dprint(message):
@@ -155,6 +156,7 @@ if __name__ == "__main__":
     files = []
     files_to_close = []
     locations = []
+    filters = []
 
     optlist, args = getopt.getopt(sys.argv[1:], 'hDFt:c:f:', ['help', 'DEBUG', 'files-only', 'token=', 'creds=',
                                                             'token-file='])
@@ -185,10 +187,20 @@ if __name__ == "__main__":
     auth = api_login(qumulo, user, password, token)
     dprint(str(auth))
     if cmd == "list":
+        filters = args
+        dprint("FILERS: " + str(filters))
         table = [['id:', 'location:', 'path:'], ['===', '=========', '=====']]
         files = get_open_files(qumulo, FILES_ONLY)
         for f in files:
-            table.append([f['id'], f['location'], f['name']])
+            match = True
+            if filters and f['name']:
+                match = False
+                for pattern in filters:
+                    if re.search(pattern, f['name']):
+                        match = True
+                        break
+            if match:
+                table.append([f['id'], f['location'], f['name']])
         widths = [max(map(len, col)) for col in zip(*table)]
         for row in table:
             print("  ".join((val.ljust(width) for val, width in zip(row, widths))))
